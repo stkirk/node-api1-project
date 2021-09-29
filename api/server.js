@@ -55,6 +55,21 @@ server.post("/api/users", (req, res) => {
       });
 });
 
+// [DELETE] user
+server.delete("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+
+  User.remove(id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).json({ message: "user does not exist" });
+      } else res.json(user);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
 //Hello world endpoint
 server.use("*", (req, res) => {
   res.status(404).json({ message: "404 Resource Not Found" });
