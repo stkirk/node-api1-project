@@ -70,6 +70,26 @@ server.delete("/api/users/:id", (req, res) => {
     });
 });
 
+// [PUT] existing user
+server.put("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
+  if (!changes.name || !changes.bio) {
+    res.status(400).json({ message: "provide name and bio" });
+  } else {
+    User.update(id, changes)
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: "does not exist" });
+        } else res.json(user);
+      })
+      .catch((err) => {
+        res.status(500).json({ message: err.message });
+      });
+  }
+});
+
 //Hello world endpoint
 server.use("*", (req, res) => {
   res.status(404).json({ message: "404 Resource Not Found" });
