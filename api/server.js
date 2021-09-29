@@ -38,6 +38,23 @@ server.get("/api/users", (req, res) => {
     });
 });
 
+// [POST] new user
+server.post("/api/users", (req, res) => {
+  // newUser object submitted in POST request
+  const newUser = req.body;
+  //   console.log("new user name: ", newUser.name, "new user bio: ", newUser.bio);
+  if (!newUser.name || !newUser.bio) {
+    res.status(400).json({ message: "provide name and bio" });
+  } else
+    User.insert(newUser)
+      .then((user) => {
+        res.status(201).json(user);
+      })
+      .catch((err) => {
+        res.status(500).json({ message: err.message });
+      });
+});
+
 //Hello world endpoint
 server.use("*", (req, res) => {
   res.status(404).json({ message: "404 Resource Not Found" });
